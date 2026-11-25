@@ -1,0 +1,62 @@
+Approved Technology Stack
+Frontend:
+- React with Vite.
+- Modern JavaScript using ES modules.
+- Tailwind CSS version 4.
+- shadcn/ui.
+- React Router.
+- Axios.
+- TanStack Query.
+- Recharts.
+- Lucide React.
+Backend:
+- Node.js.
+- Express.js.
+- MongoDB.
+- Mongoose.
+- JWT authentication using HTTP-only cookies.
+- bcrypt.
+- Zod.
+Testing:
+- Vitest.
+- Supertest.
+Development:
+- Git and GitHub.
+- Postman.
+- npm.
+Version Management
+- Inspect package.json and lockfiles before implementation.
+- Use official documentation for installed versions.
+- Do not use outdated Tailwind CSS v3 configuration in a v4 project.
+- Verify dependency compatibility before installation.
+- Record important dependency versions.
+- Ask before introducing new libraries or upgrading major versions.
+Architecture
+- Use a modular monolith.
+- Maintain separate client and server applications.
+- Use REST APIs for communication.
+- Separate HTTP handling from business logic.
+- Keep components focused and reusable.
+- Prefer readable solutions over unnecessary abstractions.
+- Introduce folders and modules when they become necessary.
+- Avoid premature optimisation.
+Database
+- Design schemas according to actual access patterns.
+- Explain embedding versus referencing decisions.
+- Preserve historical workout data.
+- Validate data before persistence.
+- Enforce user ownership of private records.
+- Store measurement units consistently.
+Security
+- Never commit secrets or credentials.
+- Use environment variables.
+- Validate untrusted input.
+- Hash passwords securely.
+- Protect private endpoints.
+- Apply appropriate CSRF, CORS, cookie and rate-limiting protections.
+Restrictions
+Do not introduce microservices, Redis, Kubernetes, external AI APIs or other infrastructure without a demonstrated need and approval.
+
+Architectural guidelines are boundaries, not instructions for every implementation detail.
+
+Propose improvements when justified.

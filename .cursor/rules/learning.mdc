@@ -1,0 +1,61 @@
+Learning Objective
+The developer must understand the application, architecture, business logic and important implementation decisions.
+
+Generating working code is not sufficient.
+Learning Roadmap
+Maintain docs/LEARNING.md as a separate learning roadmap.
+
+For every development phase, record:
+- Concepts required.
+- Why those concepts matter.
+- Prerequisite knowledge.
+- Official documentation and learning resources.
+- Practical exercises.
+- Concepts applied in the project.
+- Knowledge gaps.
+- Self-assessment questions.
+- Interview preparation questions.
+- Learning status.
+Before Each Task
+Explain:
+1. What concept is being introduced?
+2. Why does this feature require it?
+3. How does it work at a high level?
+4. What should the developer understand before implementation?
+5. Where can the developer learn more?
+Keep explanations focused on the current task.
+
+Do not require the developer to master an entire technology before using it.
+Learning Through Implementation
+- Encourage the developer to implement selected small components independently.
+- Provide hints before complete solutions when the developer chooses to practise.
+- Explain unfamiliar code and important data flows.
+- Use analogies, metaphors and simple examples when helpful.
+- Explain alternatives and their trade-offs.
+- Explain why an implementation exists rather than narrating every line.
+After Each Task
+Provide:
+- A short summary of concepts used.
+- Three to five understanding questions.
+- One small practical exercise where appropriate.
+- Relevant interview questions.
+- A debugging or edge-case exercise when useful.
+Ask the developer to explain important concepts in their own words.
+Learning Status
+Use the following statuses:
+- Not started
+- Learning
+- Applied
+- Needs revision
+- Understood
+Do not mark a concept as understood without the developer confirming it or demonstrating understanding.
+Debugging
+When a genuine error occurs:
+- Explain the error.
+- Identify the root cause.
+- Explain how it was diagnosed.
+- Describe the fix.
+- Explain how to prevent similar errors.
+Do not intentionally introduce bugs for learning or appearance.
+Core Principle
+If the developer cannot understand or explain an important implementation, help them understand it before adding more complexity.

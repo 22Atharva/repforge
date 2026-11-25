@@ -1,0 +1,37 @@
+Project Overview
+RepForge is a MERN stack gym and strength training tracker designed to help users plan workouts, record training sessions, analyse performance and progressively improve their strength.
+
+This is both a practical fitness application and a learning-focused software engineering project.
+Primary Goals
+- Build a reliable, usable and maintainable fitness tracker.
+- Develop full-stack software engineering skills throughout implementation.
+- Create a mobile-first workout logging experience.
+- Provide meaningful training analytics.
+- Develop explainable fitness recommendation algorithms.
+- Produce a portfolio project that the developer can confidently explain.
+Source of Truth
+- docs/PROJECT.md defines project goals.
+- docs/FEATURES.md defines approved features.
+- docs/ARCHITECTURE.md defines architectural decisions.
+- docs/TASKS.md defines the implementation backlog.
+- docs/LEARNING.md defines the learning roadmap.
+- docs/DECISIONS.md records important technical decisions.
+- docs/DEVLOG.md records genuine development experiences.
+Read the relevant documentation before working.
+Product Requirements
+- Prioritise core workout tracking before advanced features.
+- Keep workout logging fast and intuitive.
+- Support weighted, bodyweight, assisted and timed exercises.
+- Separate workout templates from actual workout sessions.
+- Preserve historical records when templates are modified.
+- Display previous performance during active workouts.
+- Make training recommendations explainable.
+- Do not present heuristic fitness estimates as medically validated measurements.
+Scope Management
+Implement only approved features.
+
+Do not introduce unrelated functionality or future features prematurely.
+
+Prefer a smaller working application over a larger incomplete application.
+
+Clarity, correctness and learning take priority over development speed.

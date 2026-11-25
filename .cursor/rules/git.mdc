@@ -1,0 +1,63 @@
+Version Control Goals
+Maintain a genuine, incremental and understandable Git history that reflects actual development progress.
+Repository Management
+- Initialise Git during project planning.
+- Connect the project to a GitHub repository.
+- Maintain a meaningful README.
+- Keep the main branch in a reasonably stable state.
+- Use feature branches for significant features.
+- Use bugfix branches for genuine defects when appropriate.
+Commit Guidelines
+- Make small, logically related commits.
+- Commit completed pieces of work at meaningful checkpoints.
+- Separate unrelated changes.
+- Review git status and git diff before committing.
+- Use descriptive Conventional Commit messages.
+- Explain the purpose of each proposed commit.
+- Obtain approval before committing and pushing.
+Commit Types
+- feat: New functionality.
+- fix: Genuine bug fixes.
+- refactor: Internal improvements without intended behaviour changes.
+- docs: Documentation updates.
+- test: Tests and test improvements.
+- chore: Tooling, configuration and maintenance.
+- style: Formatting changes without behaviour changes.
+- perf: Performance improvements.
+Authentic Development History
+- Preserve genuine development progress.
+- Document real mistakes and their resolutions.
+- Allow natural improvements and refactoring as the project evolves.
+- Record actual technical decisions and trade-offs.
+- Do not intentionally introduce defects.
+- Do not fabricate commit dates, bugs, test results or development activity.
+- Do not create meaningless commits to increase contribution counts.
+- Do not falsely attribute AI-generated work to manual implementation.
+Development Log
+Record significant real issues in docs/DEVLOG.md.
+
+Include:
+- Date.
+- Task or feature ID.
+- Problem encountered.
+- Root cause.
+- Investigation process.
+- Resolution.
+- Lessons learned.
+- Related commit.
+Safety
+- Never commit environment files containing secrets.
+- Never commit node_modules.
+- Do not force-push or rewrite shared history without explicit approval.
+- Do not delete branches or discard user changes without permission.
+- Do not claim a push succeeded unless verified.
+Completion
+After each meaningful checkpoint:
+1. Verify the relevant functionality.
+2. Review the diff.
+3. Propose a commit message.
+4. Wait for approval.
+5. Commit the approved changes.
+6. Push when authorised.
+7. Verify the result.
+The goal is a credible engineering history, not an artificially perfect repository.
