@@ -1,5 +1,5 @@
 import { Plus, ClipboardList, Dumbbell } from 'lucide-react';
-import Link from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function Planner() {
   return (

@@ -1,6 +1,6 @@
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { Dumbbell, Flame, Calendar, TrendingUp, Target, Clock } from 'lucide-react';
-import Link from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const stats = [
   {
