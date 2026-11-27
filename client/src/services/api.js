@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -10,10 +10,13 @@ export const api = axios.create({
   },
 });
 
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/register', '/auth/me'];
+
 api.interceptors.response.use(
-  response => response,
+  response => response.data,
   error => {
-    if (error.response?.status === 401) {
+    const isAuthEndpoint = AUTH_ENDPOINTS.some(e => error.config?.url?.includes(e));
+    if (error.response?.status === 401 && !isAuthEndpoint) {
       window.location.href = '/login';
     }
     return Promise.reject(error);

@@ -10,6 +10,8 @@ import {
   LogOut,
   Menu,
   X,
+  Utensils,
+  Droplets,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -17,6 +19,7 @@ const navItems = [
   { path: '/', label: 'Dashboard', icon: Activity },
   { path: '/exercises', label: 'Exercises', icon: BookOpen },
   { path: '/planner', label: 'Planner', icon: ClipboardList },
+  { path: '/nutrition', label: 'Nutrition', icon: Utensils },
   { path: '/history', label: 'History', icon: History },
   { path: '/profile', label: 'Profile', icon: User },
 ];

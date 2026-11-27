@@ -110,3 +110,49 @@ export const bodyMetricsSchema = z.object({
     .optional(),
   notes: z.string().optional(),
 });
+
+export const foodSchema = z.object({
+  name: z.string().min(1).max(100),
+  brand: z.string().max(100).optional(),
+  servingSize: z.number().positive(),
+  servingUnit: z.enum(['g', 'ml', 'oz', 'cup', 'tbsp', 'tsp', 'piece']),
+  caloriesPerServing: z.number().nonnegative(),
+  proteinPerServing: z.number().nonnegative(),
+  carbsPerServing: z.number().nonnegative(),
+  fatPerServing: z.number().nonnegative(),
+  fiberPerServing: z.number().nonnegative().optional(),
+  sugarPerServing: z.number().nonnegative().optional(),
+  sodiumPerServing: z.number().nonnegative().optional(),
+});
+
+export const dailyNutritionSchema = z.object({
+  date: z.string().datetime(),
+  meals: z.array(z.object({
+    name: z.enum(['breakfast', 'lunch', 'dinner', 'snack']),
+    foods: z.array(z.object({
+      foodId: z.string(),
+      foodName: z.string(),
+      servings: z.number().positive(),
+      calories: z.number().nonnegative(),
+      protein: z.number().nonnegative(),
+      carbs: z.number().nonnegative(),
+      fat: z.number().nonnegative(),
+    })),
+  })).optional(),
+  targets: z.object({
+    calories: z.number().positive().optional(),
+    protein: z.number().positive().optional(),
+    carbs: z.number().positive().optional(),
+    fat: z.number().positive().optional(),
+  }).optional(),
+});
+
+export const waterIntakeSchema = z.object({
+  date: z.string().datetime(),
+  entries: z.array(z.object({
+    amount: z.number().positive(),
+    unit: z.enum(['ml', 'oz', 'cup']).optional(),
+    time: z.string().datetime().optional(),
+  })).optional(),
+  target: z.number().positive().optional(),
+});

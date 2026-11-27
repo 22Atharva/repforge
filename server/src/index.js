@@ -11,6 +11,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import healthRoutes from './routes/health.js';
 import exerciseRoutes from './routes/exercises.js';
+import nutritionRoutes from './routes/nutrition.js';
 
 const { env } = await import('./config/env.js');
 
@@ -45,6 +46,7 @@ app.use('/api/auth', authLimiter);
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/exercises', exerciseRoutes);
+app.use('/api/nutrition', nutritionRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });

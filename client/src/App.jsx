@@ -10,6 +10,7 @@ import Planner from './pages/planner/Planner';
 import Workout from './pages/workout/Workout';
 import History from './pages/history/History';
 import Profile from './pages/Profile';
+import Nutrition from './pages/nutrition/NutritionDashboard';
 import { AuthProvider } from './features/auth/hooks/useAuth.jsx';
 import './index.css';
 
@@ -38,6 +39,7 @@ function App() {
               <Route path="/workout/:sessionId" element={<Workout />} />
               <Route path="/history" element={<History />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/nutrition" element={<Nutrition />} />
             </Route>
           </Routes>
         </AuthProvider>

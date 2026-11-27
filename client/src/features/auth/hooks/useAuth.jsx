@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   const fetchUser = useCallback(async () => {
     try {
       const response = await authApi.me();
-      setUser(response.data);
+      setUser(response.user);
     } catch {
       setUser(null);
     } finally {
@@ -27,14 +27,14 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await authApi.login(email, password);
-    setUser(response.data.user);
-    return response.data;
+    setUser(response.user);
+    return response;
   };
 
   const register = async (name, email, password) => {
     const response = await authApi.register(name, email, password);
-    setUser(response.data.user);
-    return response.data;
+    setUser(response.user);
+    return response;
   };
 
   const logout = async () => {
