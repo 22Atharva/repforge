@@ -75,6 +75,13 @@ export async function getDailyNutrition(req, res) {
   res.json(nutrition)
 }
 
+const DEFAULT_MEALS = [
+  { name: 'breakfast', foods: [], totals: { calories: 0, protein: 0, carbs: 0, fat: 0 } },
+  { name: 'lunch', foods: [], totals: { calories: 0, protein: 0, carbs: 0, fat: 0 } },
+  { name: 'dinner', foods: [], totals: { calories: 0, protein: 0, carbs: 0, fat: 0 } },
+  { name: 'snack', foods: [], totals: { calories: 0, protein: 0, carbs: 0, fat: 0 } },
+]
+
 export async function upsertDailyNutrition(req, res) {
   const { date, meals, targets } = req.body
   if (!date) return res.status(400).json({ message: 'Date required' })
@@ -97,9 +104,15 @@ export async function upsertDailyNutrition(req, res) {
     return { ...meal, foods: processedFoods, totals: mealTotals }
   })
 
+  // Ensure all default meals exist
+  const finalMeals = DEFAULT_MEALS.map(defaultMeal => {
+    const existing = processedMeals.find(m => m.name === defaultMeal.name)
+    return existing || defaultMeal
+  })
+
   const nutrition = await DailyNutrition.findOneAndUpdate(
     { userId: req.user._id, date: new Date(date) },
-    { $set: { meals: processedMeals, dailyTotals, targets: targets || { calories: 2000, protein: 150, carbs: 200, fat: 70 } } },
+    { $set: { meals: finalMeals, dailyTotals, targets: targets || { calories: 2000, protein: 150, carbs: 200, fat: 70 } } },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   ).lean()
 
