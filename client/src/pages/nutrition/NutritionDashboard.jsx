@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { format, startOfDay } from 'date-fns'
 import {
   Utensils, Droplets, Flame, TrendingUp, Target, ChevronLeft, ChevronRight,
   Plus, Apple, WheatOff, Drumstick, Zap, Droplet, CheckCircle, AlertTriangle,
-  BarChart2, PieChart, Activity, Sun, Moon, Settings
+  BarChart2, PieChart, Activity, Sun, Moon, Settings, Trash2, X, Minus, Search
 } from 'lucide-react'
 import { nutritionApi } from '../../services/nutritionApi'
 import { useAuth } from '../../features/auth/hooks/useAuth'
@@ -87,7 +87,7 @@ function MacroCard({ label, value, target, unit, color, icon }) {
   )
 }
 
-function WaterTracker({ dailyTotal, target, onAddWater }) {
+function WaterTracker({ dailyTotal, target, onAddWater, onRemoveWater, entries = [] }) {
   const percentage = target > 0 ? Math.min((dailyTotal / target) * 100, 100) : 0
   const liters = (dailyTotal / 1000).toFixed(1)
   const targetLiters = (target / 1000).toFixed(1)
@@ -117,7 +117,7 @@ function WaterTracker({ dailyTotal, target, onAddWater }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-2 mb-4">
         {[100, 250, 500].map((amount) => (
           <button
             key={amount}
@@ -128,6 +128,28 @@ function WaterTracker({ dailyTotal, target, onAddWater }) {
           </button>
         ))}
       </div>
+
+      {entries.length > 0 && (
+        <div className="border-t border-gray-100 pt-4">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">Recent Entries</h4>
+          <div className="space-y-2 max-h-40 overflow-y-auto">
+            {entries.slice(-5).reverse().map((entry, idx) => (
+              <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-600">
+                  {entry.amount}{entry.unit || 'ml'} • {format(new Date(entry.time), 'HH:mm')}
+                </span>
+                <button
+                  onClick={() => onRemoveWater(idx)}
+                  className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                  aria-label="Remove water entry"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -195,10 +217,18 @@ function MealSection({ meal, dailyNutrition, onAddFood, onRemoveFood, foods }) {
 function FoodSearchModal({ isOpen, onClose, onSelect, mealKey, searchQuery, setSearchQuery }) {
   if (!isOpen) return null
 
-  const { data: foods } = useQuery({
-    queryKey: ['foods', 'search', searchQuery],
-    queryFn: () => nutritionApi.listFoods({ search: searchQuery, limit: 20 }),
-    enabled: isOpen && searchQuery.length >= 2,
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery)
+  const [selectedServings, setSelectedServings] = useState(1)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  const { data: foods, isLoading } = useQuery({
+    queryKey: ['foods', 'search', debouncedQuery],
+    queryFn: () => nutritionApi.listFoods({ search: debouncedQuery, limit: 20 }),
+    enabled: isOpen && debouncedQuery.length >= 2,
   })
 
   return (
@@ -207,9 +237,7 @@ function FoodSearchModal({ isOpen, onClose, onSelect, mealKey, searchQuery, setS
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Add Food to {mealKey.charAt(0).toUpperCase() + mealKey.slice(1)}</h2>
           <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-600">
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="h-5 w-5" />
           </button>
         </div>
 
@@ -220,16 +248,19 @@ function FoodSearchModal({ isOpen, onClose, onSelect, mealKey, searchQuery, setS
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search foods... (min 2 chars)"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            autoFocus
           />
         </div>
 
         <div className="max-h-96 overflow-y-auto">
-          {foods?.foods?.length ? (
+          {isLoading ? (
+            <div className="p-8 text-center text-gray-500">Searching...</div>
+          ) : foods?.foods?.length ? (
             <div className="divide-y divide-gray-100">
               {foods.foods.map((food) => (
                 <button
                   key={food._id}
-                  onClick={() => { onSelect(food); onClose(); }}
+                  onClick={() => { onSelect(food, selectedServings); onClose(); }}
                   className="w-full p-4 text-left hover:bg-gray-50 transition-colors flex items-center justify-between"
                 >
                   <div>
@@ -238,11 +269,32 @@ function FoodSearchModal({ isOpen, onClose, onSelect, mealKey, searchQuery, setS
                       {food.caloriesPerServing} cal / {food.servingSize}{food.servingUnit} • P:{food.proteinPerServing}g C:{food.carbsPerServing}g F:{food.fatPerServing}g
                     </p>
                   </div>
-                  <span className="text-primary font-medium">Add</span>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelectedServings(Math.max(1, selectedServings - 0.5)); }}
+                        className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                        aria-label="Decrease servings"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      <span className="px-3 py-1 text-sm font-medium text-gray-900 min-w-[3rem] text-center">
+                        {selectedServings}
+                      </span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelectedServings(selectedServings + 0.5); }}
+                        className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                        aria-label="Increase servings"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <span className="text-primary font-medium">Add</span>
+                  </div>
                 </button>
               ))}
             </div>
-          ) : searchQuery.length >= 2 ? (
+          ) : debouncedQuery.length >= 2 ? (
             <div className="p-8 text-center text-gray-500">No foods found</div>
           ) : (
             <div className="p-8 text-center text-gray-500">Type at least 2 characters to search</div>
@@ -325,6 +377,13 @@ export default function NutritionDashboard() {
     },
   })
 
+  const removeWaterMutation = useMutation({
+    mutationFn: (entryIndex) => nutritionApi.removeWaterEntry({ date: dateStr, entryIndex }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['waterIntake', dateStr] })
+    },
+  })
+
   const upsertNutritionMutation = useMutation({
     mutationFn: (data) => nutritionApi.upsertDailyNutrition({ ...data, date: dateStr }),
     onSuccess: () => {
@@ -349,8 +408,8 @@ export default function NutritionDashboard() {
     }
   }, [dailyNutrition, waterIntake, nutritionLoading, waterLoading])
 
-  const handleAddFood = (mealKey, food) => {
-    addFoodMutation.mutate({ mealName: mealKey, foodId: food._id, servings: 1 })
+  const handleAddFood = (mealKey, food, servings = 1) => {
+    addFoodMutation.mutate({ mealName: mealKey, foodId: food._id, servings })
   }
 
   const handleRemoveFood = (mealKey, index) => {
@@ -359,6 +418,10 @@ export default function NutritionDashboard() {
 
   const handleAddWater = (amount) => {
     addWaterMutation.mutate(amount)
+  }
+
+  const handleRemoveWater = (entryIndex) => {
+    removeWaterMutation.mutate(entryIndex)
   }
 
   const targets = dailyNutrition?.targets || { calories: 2000, protein: 150, carbs: 200, fat: 70 }
@@ -407,6 +470,8 @@ export default function NutritionDashboard() {
             dailyTotal={waterIntake?.dailyTotal || 0}
             target={waterIntake?.target || 2500}
             onAddWater={handleAddWater}
+            onRemoveWater={handleRemoveWater}
+            entries={waterIntake?.entries || []}
           />
         </div>
 

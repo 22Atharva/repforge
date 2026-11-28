@@ -1,6 +1,6 @@
 import { useAuth } from '../features/auth/hooks/useAuth';
-import { Dumbbell, Flame, Calendar, TrendingUp, Target, Clock, ArrowRight, BarChart2, Trophy, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Dumbbell, Flame, Calendar, TrendingUp, Target, Clock, ArrowRight, BarChart2, Trophy, Zap, Utensils } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const stats = [
@@ -47,14 +47,10 @@ const stats = [
 ];
 
 const quickActions = [
-  { label: 'Start Workout', href: '/planner', icon: Dumbbell, primary: true, description: 'Plan and log your session' },
-  { label: 'Track Nutrition', href: '/nutrition', icon: 'utensils', primary: false, description: 'Log meals and water' },
-  { label: 'View History', href: '/history', icon: Clock, primary: false, description: 'Review past sessions' },
+  { label: 'Start Workout', to: '/planner', icon: Dumbbell, primary: true, description: 'Plan and log your session' },
+  { label: 'Track Nutrition', to: '/nutrition', icon: Utensils, primary: false, description: 'Log meals and water' },
+  { label: 'View History', to: '/history', icon: Clock, primary: false, description: 'Review past sessions' },
 ];
-
-const iconMap = {
-  utensils: <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5-5H6a5 5 0 0 0-5 5v13"/><path d="M7 20a2 2 0 0 1-2-2"/><path d="M17 20a2 2 0 0 0 2-2"/></svg>,
-};
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -251,13 +247,15 @@ export default function Dashboard() {
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-3 gap-4" variants={itemVariants}>
           {quickActions.map((action, index) => (
-            <motion.article
+            <Link
               key={action.label}
+              to={action.to}
               custom={index}
-              className={`card relative overflow-hidden group ${action.primary ? 'ring-1' : ''}`}
+              className={`card relative overflow-hidden group flex flex-col h-full ${action.primary ? 'ring-1' : ''}`}
               style={{
                 borderColor: action.primary ? 'var(--color-accent)' : 'var(--color-border)',
                 background: action.primary ? 'linear-gradient(145deg, var(--color-accent-light), var(--color-bg-card))' : undefined,
+                textDecoration: 'none',
               }}
               whileHover={{ y: -6, boxShadow: 'var(--shadow-xl)' }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -268,18 +266,14 @@ export default function Dashboard() {
                   whileHover={{ scale: 1.1, rotate: 6 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 >
-                  {action.icon === 'utensils' ? (
-                    <svg className="h-8 w-8 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5-5H6a5 5 0 0 0-5 5v13"/><path d="M7 20a2 2 0 0 1-2-2"/><path d="M17 20a2 2 0 0 0 2-2"/></svg>
-                  ) : (
-                    <motion.span
-                      className="p-3 rounded-xl"
-                      style={{ background: action.primary ? 'var(--color-accent)' : 'var(--color-accent-light)' }}
-                      whileHover={{ scale: 1.1, rotate: 6 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                    >
-                      <action.icon className="h-6 w-6" style={{ color: action.primary ? 'var(--color-bg)' : 'var(--color-accent)' }} />
-                    </motion.span>
-                  )}
+                  <motion.span
+                    className="p-3 rounded-xl"
+                    style={{ background: action.primary ? 'var(--color-accent)' : 'var(--color-accent-light)' }}
+                    whileHover={{ scale: 1.1, rotate: 6 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  >
+                    <action.icon className="h-6 w-6" style={{ color: action.primary ? 'var(--color-bg)' : 'var(--color-accent)' }} />
+                  </motion.span>
                   <motion.div className="ml-auto text-text-dim text-xs font-medium uppercase tracking-wider group-hover:text-accent transition-colors">
                     Action
                   </motion.div>
@@ -296,10 +290,7 @@ export default function Dashboard() {
                     {action.description}
                   </motion.p>
 
-                  <motion.button
-                    className={`w-full mt-4 rounded-xl font-medium transition-all group-hover:translate-x-1 ${action.primary ? 'btn-primary' : 'btn-secondary'}`}
-                    whileTap={{ scale: 0.98 }}
-                  >
+                  <div className={`w-full mt-4 rounded-xl font-medium transition-all group-hover:translate-x-1 ${action.primary ? 'btn-primary' : 'btn-secondary'} text-center`}>
                     {action.primary ? (
                       <>
                         <span>Start Now</span>
@@ -310,10 +301,10 @@ export default function Dashboard() {
                     ) : (
                       'Open'
                     )}
-                  </motion.button>
+                  </div>
                 </div>
               </motion.div>
-            </motion.article>
+            </Link>
           ))}
         </motion.div>
       </motion.section>
